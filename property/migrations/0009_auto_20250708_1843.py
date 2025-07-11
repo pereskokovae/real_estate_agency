@@ -7,22 +7,26 @@ import phonenumbers
 
 def convert_phone_numbers(apps, schema_editor):
     Flat = apps.get_model('property', 'Flat')
-    for flat in Flat.objects.all():
+    for flat in Flat.objects.all().iterator():
         phone_number = flat.owners_phonenumber
         if not phone_number:
             continue
+ 
+        try:
+            parsed_number = phonenumbers.parse(phone_number, "RU")
+        except Exception as e:
+            print(f'Ошибка: {e}')
+            
+            is_valid_number = phonenumbers.is_valid_number(parsed_number)
+            if not is_valid_number:
+                continue
 
-        parsed_number = phonenumbers.parse(phone_number, "RU")
-        is_valid_number = phonenumbers.is_valid_number(parsed_number)
-        if not is_valid_number:
-            continue
-
-        formated_number = phonenumbers.format_number(
-            parsed_number,
-            phonenumbers.PhoneNumberFormat.E164
-        )
-        flat.owner_pure_phone = formated_number
-        flat.save()
+            formated_number = phonenumbers.format_number(
+                parsed_number,
+                phonenumbers.PhoneNumberFormat.E164
+            )
+            flat.owner_pure_phone = formated_number
+            flat.save()
 
 
 class Migration(migrations.Migration):
