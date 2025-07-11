@@ -13,6 +13,11 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='flat',
             name='has_balcony',
-            field=models.BooleanField(blank=True, db_index=True, null=True, verbose_name='Наличие балкона'),
+            field=models.BooleanField(
+                blank=True,
+                db_index=True,
+                null=True,
+                verbose_name='Наличие балкона'
+                ),
         ),
     ]
