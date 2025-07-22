@@ -9,20 +9,17 @@ class Flat(models.Model):
         'Когда создано объявление',
         default=timezone.now,
         db_index=True)
-
     new_building = models.BooleanField(
         'Новостройка или нет',
         null=True,
         blank=True,
-        db_index=True
-        )
+        db_index=True)
     liked_by = models.ManyToManyField(
         User,
         related_name='user_likes',
         null=True,
         blank=True,
-        verbose_name='Кто лайкнул:'
-        )
+        verbose_name='Кто лайкнул:')
     description = models.TextField('Текст объявления', blank=True)
     price = models.IntegerField('Цена квартиры', db_index=True)
 
@@ -68,12 +65,12 @@ class Flat(models.Model):
 class Complaint(models.Model):
     user = models.ForeignKey(
         User,
-        related_name='user_compainted',
+        related_name='complaints',
         on_delete=models.CASCADE,
         verbose_name='Кто жаловался:')
     apartments = models.ForeignKey(
         Flat,
-        related_name='complaints_apartament',
+        related_name='apartaments',
         on_delete=models.CASCADE,
         verbose_name='Квартира на которую жаловались:')
     text_complaint = models.TextField(verbose_name='Текст жалобы:')
@@ -85,10 +82,9 @@ class Owner(models.Model):
         'Нормализованный номер владельца:',
         region='RU',
         blank=True)
-    owners_phonenumber = models.CharField('Номер владельца:', max_length=20)
     flats = models.ManyToManyField(
         Flat,
-        related_name='flat_owners',
+        related_name='owners',
         verbose_name='Квартиры в собственности:',
         db_index=True)
 
